@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Input Validation Example</title>
+  </head>
+  <body>
+    <form onsubmit="submitForm(event)">
+      <label for="name">Enter a complete name:</label>
+      <input
+        type="text"
+        id="input0"
+        name="name"
+        oninput="validateInput(this,/^([a-zA-z,/.-]+)\s([a-zA-z,/.-]+)$/)"
+        placeholder="mohammad azizi"
+        required
+      />
+      <span id="nameMessage"></span>
+      <br />
+      <br />
+      <label for="email">Enter a valid email address:</label>
+      <input
+        type="text"
+        id="input1"
+        name="email"
+        oninput="validateInput(this,/^[^\s@]+@[^\s@]+\.[^\s@]+$/)"
+        placeholder="test@test.com"
+        required
+      />
+      <span id="emailMessage"></span>
+      <br />
+      <br />
+      <label for="phoneNumber">Enter a valid phone number:</label>
+      <input
+        type="text"
+        id="input2"
+        name="phoneNumber"
+        oninput="validateInput(this,/09(1[0-9]|3[1-9]|2[1-9])-?[0-9]{3}-?[0-9]{4}/)"
+        placeholder="09131234567"
+        required
+      />
+      <span id="phoneNumberMessage"></span>
+      <br />
+      <br />
+      <label for="password">Enter your password:</label>
+      <input
+        type="password"
+        id="input3"
+        name="password"
+        oninput="validateInput(this,/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)"
+        required
+      />
+      <span id="passwordMessage"></span>
+      <br />
+      <br />
+      <label for="repeatPassword">Repeat your password:</label>
+      <input
+        type="password"
+        id="input4"
+        name="repeatPassword"
+        oninput="validatePassword(this)"
+        required
+      />
+      <span id="repeatPasswordMessage"></span>
+      <br />
+      <br />
+
+      <button type="submit" id="submit" disabled>Submit</button>
+    </form>
+    <div id="success" style="display: none">
+      <p>Form submitted successfully!</p>
+    </div>
+    <script>
+      const submit = document.getElementById("submit");
+      const success = document.getElementById("success");
+
+      function validateInput(input, regex) {
+        const name = input.name;
+        const message = document.getElementById(name + "Message");
+        const value = input.value.trim();
+        if (regex.test(value)) {
+          input.setCustomValidity("");
+          message.textContent = "";
+          submit.disabled = false;
+        } else {
+          input.setCustomValidity("Invalid " + name);
+          if (name == "password") {
+            message.textContent =
+              "At least 8 characters long.Contains at least one uppercase letter.Contains at least one lowercase letter.Contains at least one number." +
+              name;
+          } else {
+            message.textContent = "Invalid " + name;
+          }
+          message.style = "color: red;";
+          submit.disabled = true;
+        }
+      }
+      function validatePassword(repeatPasswordInput) {
+        const password = document.getElementById("input3").value;
+        const repeatPassword = repeatPasswordInput.value;
+        const message = document.getElementById("repeatPasswordMessage");
+
+        if (password !== repeatPassword) {
+          repeatPasswordInput.setCustomValidity("");
+          message.textContent = "Passwords are not matches";
+          message.style = "color: red;";
+          submit.disabled = true;
+        } else {
+          repeatPasswordInput.setCustomValidity("");
+          message.textContent = "";
+          submit.disabled = false;
+        }
+      }
+
+      function submitForm(event) {
+        event.preventDefault();
+        success.style.display = "block";
+        setTimeout(() => {
+          success.style.display = "none";
+          for (let i = 0; i <= 4; i++) {
+            const input = document.getElementById("input" + i);
+            input.value = "";
+          }
+          submit.disabled = true;
+        }, 1000);
+      }
+    </script>
+  </body>
+</html>
